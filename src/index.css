@@ -12,3 +12,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.container-fluid .jumbotron{
+  background-color: #CBF3F0;
+}
+
+h1{
+ font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+ font-weight: bold;
+}
+
+.jumbotron p{
+  font-family: 'Courier New', Courier, monospace;
+}
