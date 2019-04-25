@@ -26,8 +26,8 @@ export class Chat extends Component {
                     alt="bot avatar"
                   />
                 </div>
-                <div className="text R textR">Hello There, I am Tinkerbot</div>
-                <div className="text R textR">How can I help?</div>
+                <div className="text R textR">Hello there!</div>
+                <div className="text R textR">How you doing today?</div>
               </div>
 
               <div>
@@ -86,7 +86,6 @@ export class Chat extends Component {
   }
 
   scrollToMyRef() {
-    console.log('scrolling', '***');
     window.scrollTo(0, this.myRef.current.offsetTop)
   }
 
@@ -113,6 +112,7 @@ export class Chat extends Component {
           me: this.state.msg,
           bot: response,
         };
+        this.setState({msg:''});
         this.scrollToMyRef();
         this.setState(state => {
           return {
