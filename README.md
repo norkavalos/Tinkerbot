@@ -10,7 +10,7 @@ npm install
 
 ## Running app
 
-npm run build
+npm run dev
 
 ## Built with
 For this app, I used:
