@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const prompt = require('prompt-sync');
 const Assistant = require('watson-developer-cloud/assistant/v2');
 const keys = require('./secrets');
+const path = require('path');
 
 // Set up assistant service wrapper
 const service =  new Assistant({
@@ -85,4 +85,4 @@ app.get('*', (req, res) => {
 const port = process.env.PORT || 5000;
 app.listen(port);
 
-console.log(`Password generator listening on ${port}`);
+console.log(`App listening on ${port}`);
