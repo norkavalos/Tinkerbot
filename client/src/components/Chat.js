@@ -26,8 +26,8 @@ export class Chat extends Component {
                     alt="bot avatar"
                   />
                 </div>
-                <div className="text R textR">Hello there!</div>
-                <div className="text R textR">How you doing today?</div>
+                <div className="text R textR">Hello, I am Tinkerbot</div>
+                <div className="text R textR">I can help you find events on Eventbrite. Can you tell me the location you would like to me to look for?</div>
               </div>
 
               <div>
