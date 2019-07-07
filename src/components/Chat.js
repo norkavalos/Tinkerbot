@@ -105,9 +105,10 @@ export class Chat extends Component {
       }
     };
 
+    console.log(requestOpt, 'response')
     fetch(`/api/sendMessage`, requestOpt)
-      .then(res => res.text())
-      .then((response => {
+    .then(res => res.text())
+    .then((response => {
         const newConv = {
           me: this.state.msg,
           bot: response,
