@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const prompt = require('prompt-sync');
 const Assistant = require('watson-developer-cloud/assistant/v2');
-const keys = require('../secrets');
+const keys = require('./secrets');
+const path = require('path');
 
 // Set up assistant service wrapper
 const service =  new Assistant({
@@ -14,6 +14,8 @@ const service =  new Assistant({
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); // parse application/json
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 let sessionId
 
@@ -74,12 +76,13 @@ async function processResponse(response) {
   }
 }
 
-app.get('/api/greeting', (req, res) => {
-  const name = req.query.name || 'World';
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({ greeting: `Hello ${name}!` }));
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
-app.listen(3001, () =>
-  console.log('Express server is running on localhost:3001')
-);
+const port = process.env.PORT || 5000;
+app.listen(port);
+
+console.log(`App listening on ${port}`);
