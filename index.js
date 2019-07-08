@@ -70,7 +70,7 @@ async function processResponse(response) {
       });
 
       return ans;
-    } else if (generics.length > 0) {
+    }  else if (generics.length > 0) {
       return generics[0].text;
     }
   }

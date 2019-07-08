@@ -26,8 +26,8 @@ export class Chat extends Component {
                     alt="bot avatar"
                   />
                 </div>
-                <div className="text R textR">Hello there!</div>
-                <div className="text R textR">How you doing today?</div>
+                <div className="text R textR">Let's chat</div>
+
               </div>
 
               <div>
@@ -105,9 +105,10 @@ export class Chat extends Component {
       }
     };
 
+    console.log(requestOpt, 'response')
     fetch(`/api/sendMessage`, requestOpt)
-      .then(res => res.text())
-      .then((response => {
+    .then(res => res.text())
+    .then((response => {
         const newConv = {
           me: this.state.msg,
           bot: response,

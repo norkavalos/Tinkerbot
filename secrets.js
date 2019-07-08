@@ -7,7 +7,3 @@ module.exports = {
   assistantIdPer,
   eventBrite,
 };
-
-/*
-old asssistant id : ef068c98-a382-495f-9d87-1938c67118c5
-*/
