@@ -46,13 +46,9 @@ async function processResponse(response) {
   const intents = response.output.intents;
   const generics = response.output.generic;
 
-  console.log(response,'****')
-  console.log(response.output.entities, 'response.output.entities')
-
   if (intents.length > 0) {
     if (intents[0].intent === 'event_location') {
       const location = response.output.entities.find((elm) => elm.entity === 'sys-location');
-      console.log(location,'******location***')
       const events = await axios.get(
         'https://www.eventbriteapi.com/v3/events/search',
         {
