@@ -3,66 +3,52 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const path = require('path');
-const Assistant = require('watson-developer-cloud/assistant/v2');
+const AssistantV2 = require('ibm-watson/assistant/v2');
 
-const assistantId = require('../secrets');
-const eventBrite_key= require('../secrets')
 const keys = functions.config();
-
-
-// Set up assistant service wrapper
-const service =  new Assistant({
-  iam_apikey:{iam_apikey},
-  version: '2019-02-28'
-});
-
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); // parse application/json
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
+let session;
+let assistant;
 
-let sessionId
+app.use(async (req, res, next) => {
+  assistant = new AssistantV2({
+    version: '2019-02-28',
+    iam_apikey: keys.watson.key,
+    url: 'https://gateway.watsonplatform.net/assistant/api',
+  });
+  try {
+    session = await assistant.createSession({
+      assistant_id: keys.watson.assistant_id,
+    });
+  } catch (error) {
+    console.log(error, '***');
+  }
 
-
-const AssistantV2 = require('ibm-watson/assistant/v2');
-
-const assistant = new AssistantV2({
-  version: '2019-02-28',
-  iam_apikey: 'wFv99LVMT3OHGuPhK3mXo2X9zczKa5iF8gutYuCHqZb7',
-  url: 'https://gateway.watsonplatform.net/assistant/api/v2/assistants/699aacaa-86f4-4884-8e3f-e9d63c806ecc/sessions',
+  next();
 });
 
-assistant.createSession({
-  assistant_id: assistantId
-})
-  .then(res => {
-    console.log(JSON.stringify(res, null, 2));
-  })
-  .catch(err => {
-    console.log('error:', err);
-  });
-
-
-
-  app.post('/api/sendMessage', (req, res) => {
-    const { message } = req.body;
-    service.message(
-      {
-        input: { text: message},
-        assistant_id: assistantId,
-        session_id: sessionId,
-      },
-      async (err, response) => {
-        if (err) {
-          console.log('Error received', err);
-          return;
-        }
-        const ans = await processResponse(response);
-        res.send(ans);
+app.post('/api/sendMessage', (req, res) => {
+  const { message } = req.body;
+  assistant.message(
+    {
+      input: { text: message },
+      assistant_id: keys.watson.assistant_id,
+      session_id: session.session_id,
+    },
+    async (err, response) => {
+      if (err) {
+        console.log('Error received', err);
+        return;
       }
-    );
-  });
+      const ans = await processResponse(response);
+      res.send(ans);
+    }
+  );
+});
 
 
 
@@ -81,7 +67,7 @@ async function processResponse(response) {
             'location.within': '10mi'
           },
           headers: {
-            Authorization: `Bearer ${eventBrite_key}`
+            Authorization: `Bearer ${keys.eventbrite.key}`
           }
         }
       );
@@ -94,7 +80,7 @@ async function processResponse(response) {
       });
 
       return ans;
-    }  else if (generics.length > 0) {
+    } else if (generics.length > 0) {
       return generics[0].text;
     }
   }
@@ -103,10 +89,7 @@ async function processResponse(response) {
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
-const port = process.env.PORT || 5000;
-app.listen(port);
-
-console.log(`App listening on ${port}`);
+exports.app = functions.https.onRequest(app)
