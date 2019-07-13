@@ -12,7 +12,7 @@ const keys = functions.config();
 
 // Set up assistant service wrapper
 const service =  new Assistant({
-  iam_apikey:'wFv99LVMT3OHGuPhK3mXo2X9zczKa5iF8gutYuCHqZb7',
+  iam_apikey:{iam_apikey},
   version: '2019-02-28'
 });
 
